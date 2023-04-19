@@ -1,4 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using OAuth2Homework;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// 註冊 DbContext 和 InMemory Database Provider
+
+builder.Services.AddDbContext<MyDbContext>(options =>
+{
+    options.UseInMemoryDatabase("MyDatabase");
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
