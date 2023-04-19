@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace OAuth2Homework;
@@ -10,44 +9,15 @@ public class MyDbContext : DbContext
     {
     }
 
-    public DbSet<AccessTokenResponse> AccessTokens { get; set; }
-    public DbSet<UserProfile> UserProfiles { get; set; }
+    public DbSet<Login> Login { get; set; }
 }
 
-public class AccessTokenResponse
+public class Login
 {
-    [JsonPropertyName("access_token")]
     [Key]
+    public string? UserId { get; internal set; }
+    public string? DisplayName { get; internal set; }
     public string? AccessToken { get; set; }
-
-    [JsonPropertyName("token_type")]
-    public string? TokenType { get; set; }
-
-    [JsonPropertyName("refresh_token")]
-    public string? RefreshToken { get; set; }
-
-    [JsonPropertyName("expires_in")]
-    public int ExpiresIn { get; set; }
-
-    [JsonPropertyName("scope")]
-    public string? Scope { get; set; }
-
-    [JsonPropertyName("id_token")]
     public string? IdToken { get; set; }
-}
-
-public class UserProfile
-{
-    [JsonPropertyName("userId")]
-    [Key]
-    public string? UserId { get; set; }
-
-    [JsonPropertyName("displayName")]
-    public string? DisplayName { get; set; }
-
-    [JsonPropertyName("pictureUrl")]
-    public string? PictureUrl { get; set; }
-
-    [JsonPropertyName("statusMessage")]
-    public string? StatusMessage { get; set; }
+    public string? NotifyToken { get; set; }
 }

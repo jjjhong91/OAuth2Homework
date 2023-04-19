@@ -1,0 +1,10 @@
+@model OAuth2Homework.Controllers.SubscriptNotifyViewModel
+<h2>@Model.WelcomeMessage</h2>
+@if (Model.HasSubscript)
+{
+    <a class="btn btn-primary" asp-controller="LineNotify" asp-action="Unsubscript">取消 LINE Notify 通知</a>
+}
+else
+{
+    <a class="btn btn-primary" asp-controller="LineNotify" asp-action="Subscript">訂閱 LINE Notify 通知</a>
+}

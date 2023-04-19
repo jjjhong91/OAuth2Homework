@@ -10,6 +10,9 @@ builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseInMemoryDatabase("MyDatabase");
 });
 
+builder.Services.Configure<AppSettings>(builder.Configuration);
+builder.Services.AddOptions<AppSettings>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 builder.Services.AddHttpClient();
