@@ -183,3 +183,15 @@ public class UserProfile
     [JsonPropertyName("statusMessage")]
     public string? StatusMessage { get; set; }
 }
+
+public class LineNotifyAccessTokenResponse
+{
+    [JsonPropertyName("status")]
+    public int Status { get; set; }
+
+    [JsonPropertyName("message")]
+    public string? Message { get; set; }
+
+    [JsonPropertyName("access_token")]
+    public string? AccessToken { get; set; }
+}
