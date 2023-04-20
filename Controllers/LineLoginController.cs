@@ -29,8 +29,8 @@ public class LineLoginController : Controller
     public async Task<IActionResult> Callback(string code, string state)
     {
         // Exchange authorization code for access token
-        HttpClient client = _httpClientFactory.CreateClient();
-        Dictionary<string, string> parameters = new Dictionary<string, string>
+        var client = _httpClientFactory.CreateClient();
+        var parameters = new Dictionary<string, string>
             {
                 { "grant_type", "authorization_code" },
                 { "code", code },
@@ -38,17 +38,17 @@ public class LineLoginController : Controller
                 { "client_id", _clientId },
                 { "client_secret", _clientSecret }
             };
-        FormUrlEncodedContent content = new FormUrlEncodedContent(parameters);
-        HttpResponseMessage response = await client.PostAsync("https://api.line.me/oauth2/v2.1/token", content);
-        string json = await response.Content.ReadAsStringAsync();
-        AccessTokenResponse accessTokenResponse = JsonSerializer.Deserialize<AccessTokenResponse>(json);
+        var content = new FormUrlEncodedContent(parameters);
+        var response = await client.PostAsync("https://api.line.me/oauth2/v2.1/token", content);
+        var json = await response.Content.ReadAsStringAsync();
+        var accessTokenResponse = JsonSerializer.Deserialize<AccessTokenResponse>(json);
 
 
         // Get user profile
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessTokenResponse.AccessToken);
         response = await client.GetAsync("https://api.line.me/v2/profile");
         json = await response.Content.ReadAsStringAsync();
-        UserProfile userProfile = JsonSerializer.Deserialize<UserProfile>(json);
+        var userProfile = JsonSerializer.Deserialize<UserProfile>(json);
 
         var entity = new Login
         {
@@ -70,11 +70,12 @@ public class LineLoginController : Controller
     public IActionResult Index()
     {
         var login = _dbContext.Login.FirstOrDefault();
-        if(login is null) RedirectToAction("Index", "Home");
+        if(login is null) return RedirectToAction("Index", "Home");
         var vm = new SubscriptNotifyViewModel
         {
             WelcomeMessage = $"歡迎 {login.DisplayName}",
-            HasSubscript = !string.IsNullOrEmpty(login.NotifyToken)
+            HasSubscript = !string.IsNullOrEmpty(login.NotifyToken),
+            Messages = _dbContext.Messages.OrderByDescending(m => m.Timestamp).ToList()
         };
         return View(vm);
     }
@@ -146,6 +147,7 @@ public class SubscriptNotifyViewModel
 {
     public string? WelcomeMessage { get; set; }
     public bool HasSubscript { get; set; }
+    public List<NotifyMessage> Messages { get; set; }
 }
 
 public class AccessTokenResponse

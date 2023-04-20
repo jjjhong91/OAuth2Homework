@@ -1,10 +1,30 @@
 @model OAuth2Homework.Controllers.SubscriptNotifyViewModel
-<h2>@Model.WelcomeMessage</h2>
+<h2 class="mb-3">@Model.WelcomeMessage</h2>
 @if (Model.HasSubscript)
 {
-    <a class="btn btn-primary" asp-controller="LineNotify" asp-action="Unsubscript">取消 LINE Notify 通知</a>
+    <div class="mb-3 row">
+        <a class="btn btn-primary" asp-controller="LineNotify" asp-action="Unsubscript">取消 LINE Notify 通知</a>
+    </div>
+    <div class="mb-3 row">
+        <form class="row g-3" asp-controller="LineNotify" asp-action="SubmitMessage" method="post">
+            <div class="col-auto">
+                <label for="message" class="visually-hidden">請輸入訊息：</label>
+                <input type="text" class="form-control" id="message" name="message" placeholder="Message">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-3">送出</button>
+            </div>
+        </form>
+    </div>
+    <div class="mb-3">
+        <label for="messageArea" class="form-label">訊息紀錄：</label>
+        <textarea class="form-control" id="messageArea" rows="3">@string.Join(Environment.NewLine, Model.Messages.Select(m => m.Message))</textarea>
+    </div>
+
 }
 else
 {
-    <a class="btn btn-primary" asp-controller="LineNotify" asp-action="Subscript">訂閱 LINE Notify 通知</a>
+    <div class="mb-3 row">
+        <a class="btn btn-primary w-50" asp-controller="LineNotify" asp-action="Subscript">訂閱 LINE Notify 通知</a>
+    </div>
 }

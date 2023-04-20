@@ -73,4 +73,24 @@ public class LineNotifyController : Controller
 
         return RedirectToAction("Index", "LineLogin");
     }
+
+    [HttpPost]
+    public async Task<IActionResult> SubmitMessage(string message)
+    {
+        var login = _dbContext.Login.FirstOrDefault();
+        var requestUri = "https://notify-api.line.me/api/notify";
+        var httpClient = _httpClientFactory.CreateClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", login.NotifyToken);
+        var parameters = new Dictionary<string, string>
+            {
+                { "message", message },
+            };
+        var content = new FormUrlEncodedContent(parameters);
+        var response = await httpClient.PostAsync(requestUri, content);
+
+        _dbContext.Messages.Add(new NotifyMessage { Message = message, Timestamp = DateTime.Now});
+        await _dbContext.SaveChangesAsync();
+
+        return RedirectToAction("Index", "LineLogin");
+    }
 }
